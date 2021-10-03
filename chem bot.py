@@ -1,9 +1,10 @@
+from os import getenv
 import discord
 import pubchempy as pcp
 from discord.ext import commands
 from collections import Counter
 
-TOKEN = "Token"
+TOKEN = getenv('TOKEN') # Change bot token
 
 client = commands.Bot(command_prefix = "chem ", activity=discord.Game(name="Prefix = chem"))
 
