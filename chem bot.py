@@ -22,6 +22,7 @@ async def on_command_error(ctx, error):
             color = discord.Color.red()),
           delete_after = 5.0
         )
+
 # Search #
 async def search_mf(name_name):
   name_results = pcp.get_compounds(name_name, "name")
@@ -45,7 +46,7 @@ async def search_name(name_mf):
 
 
 @client.command()
-async def search(ctx,*, search_type_args):
+async def search(ctx, *, search_type_args):
 
   smf = (" ".join(search_type_args.split()))
   found_cpmd = await search_mf(smf)
