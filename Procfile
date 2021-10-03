@@ -1,1 +1,1 @@
-worker: python chembot.py
+web: python chembot.py
