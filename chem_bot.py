@@ -6,7 +6,7 @@ from collections import Counter
 
 TOKEN = getenv('TOKEN') # Change bot token
 
-client = commands.Bot(command_prefix = "chem ", activity=discord.Game(name="Prefix = chem"))
+client = commands.Bot(command_prefix = "chem ", activity=discord.Game(name="chem"))
 
 @client.event
 async def on_ready():
