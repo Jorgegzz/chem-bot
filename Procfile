@@ -1,1 +1,1 @@
-worker: python chem bot.py
+worker: python chem_bot.py
