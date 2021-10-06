@@ -80,3 +80,6 @@ webencodings==0.5.1
 websocket-client==1.2.1
 widgetsnbextension==3.5.1
 yarl==1.6.3
+
+chempy~=0.8.2
+sympy~=1.8

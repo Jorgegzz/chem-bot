@@ -1,14 +1,14 @@
 from os import getenv
 import discord
 import pubchempy as pcp
-import chempy.chemistry as ch
+import eq_balancer as eb
 from discord.ext import commands
 from collections import Counter
 
 
-TOKEN = getenv('TOKEN')  # Change bot token
-PREFIX = "chem "
-client = commands.Bot(command_prefix=PREFIX, activity=discord.Game(name=PREFIX))
+TOKEN = "TOKEN"  # Change bot token
+PREFIX = "totno "
+client = commands.Bot(command_prefix = PREFIX, activity = discord.Game(name = PREFIX))
 
 
 @client.event
@@ -52,12 +52,12 @@ async def search_name(name_mf):
 
 @client.command()
 async def search(ctx, *, search_type_args):
-    smf = (" ".join(search_type_args.split()))
-    found_cpmd = await search_mf(smf)
+    scm = (" ".join(search_type_args.split()))
+    found_cpmd = await search_mf(scm)
 
     if not found_cpmd:
-        scm = search_type_args.split()
-        found_cpmd = await search_name(scm)
+        smf = search_type_args.split()
+        found_cpmd = await search_name(smf)
 
     embed = discord.Embed(
         title=found_cpmd.synonyms[0],
@@ -118,6 +118,61 @@ async def search(ctx, *, search_type_args):
         text="Retrieved from pubchem using the pubchempy library"
     )
 
+    await ctx.send(embed=embed)
+
+
+@client.command()
+async def balance(ctx, *, equation):
+    split_equation = equation.split("=", 1)
+    reactants = split_equation[0]
+    products = split_equation[1]
+
+    await ctx.send("Loading (This may take a while)...")
+    embed = discord.Embed(
+        title = "Balance Equation",
+        color = discord.Color.blue()
+    )
+
+    embed.set_author(
+        name=f"Requested by {ctx.author.display_name}",
+        icon_url=ctx.author.avatar_url
+    )
+    splt_reactants = products.split("+")
+    output_reacs = ""
+    for ind, reac in enumerate(splt_reactants):
+        found_reac = await search_name(reac)
+        reac_link = f"[{reac}](https://pubchem.ncbi.nlm.nih.gov/compound/{found_reac.cid})"
+        if ind != 0:
+            output_reacs += f"+ {reac_link}"
+        else:
+            output_reacs += reac_link
+    embed.add_field(
+        name="**Reactants**",
+        value = output_reacs,
+        inline = True
+    )
+
+    splt_products = products.split("+")
+    output_prods = ""
+    for ind, prod in enumerate(splt_products):
+        found_prod = await search_name(prod)
+        prod_link = f"[{prod}](https://pubchem.ncbi.nlm.nih.gov/compound/{found_prod.cid})"
+        if ind != 0:
+            output_prods += f" + {prod_link}"
+        else:
+            output_prods += prod_link
+
+    embed.add_field(
+        name="**Products**",
+        value = output_prods,
+        inline = True
+    )
+
+    embed.add_field(
+        name="**Balanced**",
+        value = f"{eb.balance(reactants, products)}".replace("**1**", ""),
+        inline = False
+    )
     await ctx.send(embed=embed)
 
 
