@@ -11,13 +11,14 @@ PREFIX = "totno "
 client = commands.Bot(command_prefix = PREFIX, activity = discord.Game(name = PREFIX))
 client.remove_command("help")
 
+
 @client.event
 async def on_ready():
     print("Bot has successfully logged in as: {}".format(client.user))
     print("Bot ID: {}\n".format(client.user.id))
 
 
-@client.event
+#@client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(
@@ -34,18 +35,19 @@ async def on_command_error(ctx, error):
 
 
 # Help Command #
+@client.command()
 async def help(ctx):
     embed = discord.Embed(
         title = "List of commands",
         color = discord.Color.green()
     )
     embed.add_field(
-        name="*chem search* (compound name or formula)",
+        name="chem search ( compound name or formula )",
         value="Returns compound info",
         inline=False
     )
     embed.add_field(
-        name="chem balance ( chemical equation Ex. *C + H3O = CO2 + H* )",
+        name="chem balance ( chemical equation Ex. *C + H3O = CO2 + H*  )",
         value="Returns balanced equation (Verifies individual"
               " compounds but doesnt verify if the reaction itself is possible)\n",
         inline=False
@@ -53,7 +55,9 @@ async def help(ctx):
     embed.set_footer(
         text = "Warning: this bot is still being developed and you may encounter errors"
     )
-    await ctx.send(ctx.message.author, embed=embed)
+    emoji = "\u2705"
+    await ctx.message.add_reaction(emoji)
+    await ctx.author.send(embed=embed)
 
 
 # Search Equations #
